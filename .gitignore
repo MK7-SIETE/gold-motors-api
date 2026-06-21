@@ -18,3 +18,6 @@ yarn-error.log
 /.nova
 /.vscode
 *.sqlite
+"storage/framework/sessions/*" 
+"storage/logs/*.log" 
+"!storage/logs/.gitkeep" 
