@@ -11,23 +11,27 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-  ->withMiddleware(function (Middleware $middleware) {
-    $middleware->statefulApi();
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->use([
+            \Illuminate\Http\Middleware\HandleCors::class,
+        ]);
 
-    $middleware->validateCsrfTokens(except: [
-        'api/*',
-    ]);
+        $middleware->statefulApi();
 
-    $middleware->alias([
-        'dealer.auth' => \App\Http\Middleware\DealerAuth::class,
-        'super.auth'  => \App\Http\Middleware\SuperAuth::class,
-    ]);
+        $middleware->validateCsrfTokens(except: [
+            'api/*',
+        ]);
 
-    $middleware->priority([
-        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        \Illuminate\Auth\Middleware\Authenticate::class,
-    ]);
-})
+        $middleware->alias([
+            'dealer.auth' => \App\Http\Middleware\DealerAuth::class,
+            'super.auth'  => \App\Http\Middleware\SuperAuth::class,
+        ]);
+
+        $middleware->priority([
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \Illuminate\Auth\Middleware\Authenticate::class,
+        ]);
+    })
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
