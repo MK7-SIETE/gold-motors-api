@@ -14,14 +14,16 @@ WORKDIR /var/www
 # Copy project files
 COPY . .
 
-# Install PHP dependencies with memory limit fix
+# Install PHP dependencies
 RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader
+
+# Copy startup script
+COPY docker-start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Expose port
 EXPOSE 10000
 
-# Start Laravel
-CMD php artisan config:clear && php artisan migrate --force 2>&1 && php artisan db:seed --force 2>&1 && php artisan serve --host=0.0.0.0 --port=10000
+CMD ["/usr/local/bin/start.sh"]
