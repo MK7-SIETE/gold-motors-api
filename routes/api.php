@@ -18,10 +18,7 @@ use App\Http\Controllers\Api\NoticeController;
 
 
 // ── Public routes ──────────────────────────────────────────────
-Route::get('/run-seed', function () {
-    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-    return response()->json(['done' => true]);
-});
+
 
 Route::get('config',             [SuperAdminController::class, 'getConfig']);
 Route::get('cars',               [CarController::class, 'index']);
