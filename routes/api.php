@@ -18,35 +18,6 @@ use App\Http\Controllers\Api\NoticeController;
 
 
 // ── Public routes ──────────────────────────────────────────────
-Route::get('/fix-images', function () {
-    $images = [
-        2 => ['https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80',
-              'https://images.unsplash.com/photo-1617814076668-8dfc6fe3b744?w=800&q=80'],
-        3 => ['https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&q=80',
-              'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=800&q=80'],
-        4 => ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
-              'https://images.unsplash.com/photo-1504215680853-026ed2a45def?w=800&q=80'],
-        5 => ['https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800&q=80',
-              'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800&q=80'],
-        6 => ['https://images.unsplash.com/photo-1519245659620-e859806a8d3b?w=800&q=80',
-              'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80'],
-    ];
-    $now = now()->toDateTimeString();
-    foreach ($images as $carId => $urls) {
-        \Illuminate\Support\Facades\DB::table('car_images')->where('car_id', $carId)->delete();
-        foreach ($urls as $i => $url) {
-            \Illuminate\Support\Facades\DB::table('car_images')->insert([
-                'car_id'     => $carId,
-                'path'       => $url,
-                'sort_order' => $i,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ]);
-        }
-    }
-    return response()->json(['done' => true, 'cars_updated' => count($images)]);
-});
-
 Route::get('config',             [SuperAdminController::class, 'getConfig']);
 Route::get('cars',               [CarController::class, 'index']);
 Route::get('cars/featured/list', [CarController::class, 'featured']);
