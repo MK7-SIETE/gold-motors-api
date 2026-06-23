@@ -18,13 +18,15 @@ class CarImage extends Model
 
     public function getUrlAttribute(): string
     {
-        // If path is already a full URL (e.g. Unsplash or external), return as-is
-        if (str_starts_with($this->path, 'http://') || str_starts_with($this->path, 'https://')) {
-            return $this->attributes['path'] ?? ''
+        // Access raw attribute directly to avoid infinite recursion
+        $path = $this->attributes['path'] ?? '';
+
+        // If path is already a full URL, return as-is
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
         }
 
-        // Otherwise serve from local storage
-        return Storage::disk('public')->url($this->path);
+        return Storage::disk('public')->url($path);
     }
 
     protected $appends = ['url'];
