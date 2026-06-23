@@ -20,7 +20,7 @@ class CarImage extends Model
     {
         // If path is already a full URL (e.g. Unsplash or external), return as-is
         if (str_starts_with($this->path, 'http://') || str_starts_with($this->path, 'https://')) {
-            return $this->path;
+            return $this->attributes['path'] ?? ''
         }
 
         // Otherwise serve from local storage
