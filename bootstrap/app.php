@@ -24,6 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'dealer.auth' => \App\Http\Middleware\DealerAuth::class,
             'super.auth'  => \App\Http\Middleware\SuperAuth::class,
         ]);
+
+        // Tell Sanctum to use token auth for API routes
+        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
