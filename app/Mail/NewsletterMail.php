@@ -22,7 +22,7 @@ class NewsletterMail extends Mailable
 
     public function envelope(): Envelope
     {
-        $dealership = SiteConfig::get('dealership_name', 'Gold Motors');
+        $dealership = SiteConfig::get('dealership_name', 'Mukuba Motors');
         return new Envelope(
             from: new \Illuminate\Mail\Mailables\Address(
                 config('mail.from.address'),

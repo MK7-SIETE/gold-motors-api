@@ -13,11 +13,11 @@ class DatabaseSeeder extends Seeder
         $now = now()->toDateTimeString();
 
         // ── Super admin ────────────────────────────────
-        $superExists = DB::table('users')->where('email', env('SUPER_ADMIN_EMAIL', 'admin@goldmotors.zm'))->exists();
+        $superExists = DB::table('users')->where('email', env('SUPER_ADMIN_EMAIL', 'admin@mukubamotors.zm'))->exists();
         if (!$superExists) {
             DB::table('users')->insert([
                 'name'       => 'Super Admin',
-                'email'      => env('SUPER_ADMIN_EMAIL', 'admin@goldmotors.zm'),
+                'email'      => env('SUPER_ADMIN_EMAIL', 'admin@mukubamotors.zm'),
                 'password'   => Hash::make(env('SUPER_ADMIN_PASSWORD', 'Platform$uper2025!')),
                 'role'       => 'super',
                 'is_active'  => true,
@@ -27,11 +27,11 @@ class DatabaseSeeder extends Seeder
         }
 
         // ── Dealer account ─────────────────────────────
-        $dealerExists = DB::table('users')->where('email', 'admin@goldmotors.com')->exists();
+        $dealerExists = DB::table('users')->where('email', 'dealer@mukubamotors.zm')->exists();
         if (!$dealerExists) {
             DB::table('users')->insert([
-                'name'       => 'Gold Motors Admin',
-                'email'      => 'admin@goldmotors.com',
+                'name'       => 'Mukuba Motors Admin',
+                'email'      => 'dealer@mukubamotors.zm',
                 'password'   => Hash::make('GoldAdmin2025!'),
                 'role'       => 'dealer',
                 'is_active'  => true,
@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        $dealer = DB::table('users')->where('email', 'admin@goldmotors.com')->first();
+        $dealer = DB::table('users')->where('email', 'dealer@mukubamotors.zm')->first();
 
         // ── Sample cars ────────────────────────────────
         $carCount = DB::table('cars')->count();
@@ -187,11 +187,11 @@ class DatabaseSeeder extends Seeder
 
         // ── Site config ────────────────────────────────
         $configs = [
-            'dealership_name' => 'Gold Motors General Dealers Ltd',
+            'dealership_name' => 'Mukuba Motors Ltd',
             'phone'           => '+260 97X XXX XXX',
-            'email'           => 'info@goldmotors.zm',
+            'email'           => 'info@mukubamotors.zm',
             'address'         => 'Plot 1234, Cairo Road, Lusaka, Zambia',
-            'about'           => 'Gold Motors General Dealers Limited is a Zambian premium pre-owned vehicle dealership.',
+            'about'           => 'Mukuba Motors Limited is a Zambian premium pre-owned vehicle dealership.',
             'facebook'        => '',
             'instagram'       => '',
             'twitter'         => '',

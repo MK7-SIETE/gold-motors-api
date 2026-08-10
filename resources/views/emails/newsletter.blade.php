@@ -29,7 +29,7 @@
   <div class="wrapper">
 
     <div class="header">
-      <h1>{{ \App\Models\SiteConfig::get('dealership_name', 'Gold Motors') }}</h1>
+      <h1>{{ \App\Models\SiteConfig::get('dealership_name', 'Mukuba Motors') }}</h1>
       <p>{{ \App\Models\SiteConfig::get('email', '') }}</p>
     </div>
 
