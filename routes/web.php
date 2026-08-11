@@ -9,5 +9,3 @@ Route::get('/', function () {
         'status'  => 'running',
     ]);
 });
-
-Route::get('/debug-fileinfo', function () { return response()->json(['fileinfo_loaded' => extension_loaded('fileinfo'), 'php_version' => phpversion()]); });
