@@ -49,7 +49,7 @@ class ImageController extends Controller
 
         foreach ($request->file('images') as $file) {
             $timestamp = time();
-            $folder    = 'gold-motors/cars/' . $car->id;
+            $folder    = 'mukuba-motors/cars/' . $car->id;
             $signature = sha1("folder={$folder}&timestamp={$timestamp}{$apiSecret}");
 
             $response = Http::attach(
