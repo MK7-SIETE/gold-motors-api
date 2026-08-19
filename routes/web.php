@@ -10,7 +10,7 @@ Route::get('/', function () {
     ]);
 });
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Route;
+
 
 Route::get('/run-setup-tasks/{key}', function (string $key, \Illuminate\Http\Request $request) {
     if ($key !== env('SETUP_TASK_KEY')) {
