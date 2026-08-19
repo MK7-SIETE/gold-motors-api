@@ -36,7 +36,7 @@ class ImageController extends Controller
                     }
 
                     if (!$this->isValidImageSignature($value->getRealPath())) {
-                        $fail('The ' . $attribute . ' must be a valid jpeg, png, or webp image.');
+                        $fail('The ' . $attribute . ' must be a valid jpeg, png, AVIF or webp image.');
                     }
                 },
             ],
