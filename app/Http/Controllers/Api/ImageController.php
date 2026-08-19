@@ -157,7 +157,7 @@ class ImageController extends Controller
         $isPng  = substr($header, 0, 8) === "\x89PNG\r\n\x1a\n";
         $isWebp = substr($header, 0, 4) === 'RIFF' && substr($header, 8, 4) === 'WEBP';
 
-        return $isJpeg || $isPng || $isWebp;
+        return $isJpeg || $isPng || $isWebp || $isAvif;
     }
 
     private function deleteFromCloudinary(string $url): void
