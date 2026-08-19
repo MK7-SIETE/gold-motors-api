@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Car;
 use App\Models\CarImage;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
@@ -20,9 +21,20 @@ class ImageController extends Controller
             'images'   => ['required', 'array', 'min:1', 'max:15'],
             'images.*' => [
                 'required',
-                'file',
-                'max:5120',
                 function ($attribute, $value, $fail) {
+                    if (!$value instanceof UploadedFile || !$value->isValid()) {
+                        $reason = $value instanceof UploadedFile
+                            ? $value->getErrorMessage()
+                            : 'File was not received by the server at all.';
+                        $fail("Upload rejected before validation: {$reason}");
+                        return;
+                    }
+
+                    if ($value->getSize() > 5120 * 1024) {
+                        $fail('The ' . $attribute . ' may not be larger than 5MB.');
+                        return;
+                    }
+
                     if (!$this->isValidImageSignature($value->getRealPath())) {
                         $fail('The ' . $attribute . ' must be a valid jpeg, png, or webp image.');
                     }
@@ -64,7 +76,7 @@ class ImageController extends Controller
 
             $imageId = DB::table('car_images')->insertGetId([
                 'car_id'     => $car->id,
-                'path'       => $cloudUrl,  // store full Cloudinary URL as path
+                'path'       => $cloudUrl,
                 'sort_order' => $sortOrder,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -91,7 +103,6 @@ class ImageController extends Controller
             abort(403, 'Image does not belong to this car.');
         }
 
-        // Try to delete from Cloudinary if it's a Cloudinary URL
         $path = $img->attributes['path'] ?? '';
         if (str_contains($path, 'cloudinary.com')) {
             $this->deleteFromCloudinary($path);
@@ -129,9 +140,6 @@ class ImageController extends Controller
         }
     }
 
-    // Checks the file's actual first bytes against known image signatures,
-    // instead of trusting PHP's fileinfo sniffing (which misreads some
-    // valid webp/png files on certain server environments).
     private function isValidImageSignature(string $path): bool
     {
         $handle = fopen($path, 'rb');
