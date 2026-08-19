@@ -18,7 +18,16 @@ class ImageController extends Controller
 
         $request->validate([
             'images'   => ['required', 'array', 'min:1', 'max:15'],
-            'images.*' => ['required', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
+            'images.*' => [
+                'required',
+                'file',
+                'max:5120',
+                function ($attribute, $value, $fail) {
+                    if (!$this->isValidImageSignature($value->getRealPath())) {
+                        $fail('The ' . $attribute . ' must be a valid jpeg, png, or webp image.');
+                    }
+                },
+            ],
         ]);
 
         $uploaded  = [];
@@ -120,6 +129,29 @@ class ImageController extends Controller
         }
     }
 
+    // Checks the file's actual first bytes against known image signatures,
+    // instead of trusting PHP's fileinfo sniffing (which misreads some
+    // valid webp/png files on certain server environments).
+    private function isValidImageSignature(string $path): bool
+    {
+        $handle = fopen($path, 'rb');
+        if ($handle === false) {
+            return false;
+        }
+        $header = fread($handle, 12);
+        fclose($handle);
+
+        if (strlen($header) < 12) {
+            return false;
+        }
+
+        $isJpeg = substr($header, 0, 2) === "\xFF\xD8";
+        $isPng  = substr($header, 0, 8) === "\x89PNG\r\n\x1a\n";
+        $isWebp = substr($header, 0, 4) === 'RIFF' && substr($header, 8, 4) === 'WEBP';
+
+        return $isJpeg || $isPng || $isWebp;
+    }
+
     private function deleteFromCloudinary(string $url): void
     {
         try {
@@ -127,8 +159,6 @@ class ImageController extends Controller
             $apiKey    = config('services.cloudinary.api_key');
             $apiSecret = config('services.cloudinary.api_secret');
 
-            // Extract public_id from URL
-            // URL format: https://res.cloudinary.com/{cloud}/image/upload/v123/{public_id}.ext
             preg_match('/upload\/(?:v\d+\/)?(.+)\.[a-z]+$/i', $url, $matches);
             if (empty($matches[1])) return;
 
