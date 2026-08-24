@@ -28,6 +28,7 @@ Route::get('testimonials',       [TestimonialController::class, 'index']);
 Route::post('testimonials',      [TestimonialController::class, 'store']);
 Route::post('subscribe',         [SubscriberController::class, 'subscribe']);
 Route::get('unsubscribe/{token}',[SubscriberController::class, 'unsubscribe']);
+Route::get('/health', fn () => response()->json(['status' => 'ok']));
 
 // ── Dealer auth ────────────────────────────────────────────────
 Route::post('dealer/login',  [AuthController::class, 'dealerLogin']);
@@ -121,5 +122,5 @@ Route::middleware(['auth:sanctum', 'super.auth'])->prefix('super')->group(functi
     // System
     Route::get('health',       [SystemHealthController::class, 'index']);
     Route::get('security-log', [SecurityLogController::class,  'index']);
-    Route::get('/health', fn () => response()->json(['status' => 'ok']));
+  
 });
