@@ -121,4 +121,5 @@ Route::middleware(['auth:sanctum', 'super.auth'])->prefix('super')->group(functi
     // System
     Route::get('health',       [SystemHealthController::class, 'index']);
     Route::get('security-log', [SecurityLogController::class,  'index']);
+    Route::get('/health', fn () => response()->json(['status' => 'ok']));
 });
